@@ -10,6 +10,7 @@ public class Main {
         daftarProduk.add(new Kopi("Americano", 20000, 15, "Medium", "Robusta"));
         daftarProduk.add(new NonKopi("Matcha Latte", 22000, 8, "Latte", "Sedang"));
         daftarProduk.add(new NonKopi("Chocolate", 18000, 12, "Cokelat", "Manis"));
+        daftarProduk.add(new Makanan("Croissant", 18000, 7, "Pastry", "Sedang"));
 
         int pilihan;
 
