@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -31,8 +32,11 @@ public class Main {
             System.out.println("3. Cari Produk");
             System.out.println("4. Simulasi Proses Produk");
             System.out.println("5. Keluar");
+            System.out.println("6. Beri Rating Produk");
+            System.out.println("7. Proses Pesanan Produk");
             System.out.println("========================================");
             System.out.print("Pilih menu: ");
+
             pilihan = input.nextInt();
             input.nextLine();
 
@@ -61,7 +65,6 @@ public class Main {
                     if (jenis == 1) {
                         System.out.print("Ukuran: ");
                         String ukuran = input.nextLine();
-
                         System.out.print("Jenis Biji Kopi: ");
                         String jenisBiji = input.nextLine();
 
@@ -72,7 +75,6 @@ public class Main {
                     } else if (jenis == 2) {
                         System.out.print("Jenis Minuman: ");
                         String jenisMinuman = input.nextLine();
-
                         System.out.print("Tingkat Rasa: ");
                         String tingkatRasa = input.nextLine();
 
@@ -83,7 +85,6 @@ public class Main {
                     } else if (jenis == 3) {
                         System.out.print("Jenis Makanan: ");
                         String jenisMakanan = input.nextLine();
-
                         System.out.print("Ukuran Porsi: ");
                         String ukuranPorsi = input.nextLine();
 
@@ -94,23 +95,22 @@ public class Main {
                     } else {
                         System.out.println("Jenis produk tidak tersedia.");
                     }
-
                     break;
 
                 case 2:
                     System.out.println("\n=== SELURUH DATA PRODUK ===");
 
                     ProdukKopi[] daftarArray =
-                            daftarProduk.toArray(new ProdukKopi[0]);
+                        daftarProduk.toArray(new ProdukKopi[0]);
 
                     for (ProdukKopi produk : daftarArray) {
                         produk.tampilkanInfo();
                     }
 
                     System.out.println("----------------------------------------");
-                    System.out.println("Total objek produk: "
-                            + ProdukKopi.getJumlahProduk());
-
+                    System.out.println(
+                        "Total objek produk: " + ProdukKopi.getJumlahProduk()
+                    );
                     break;
 
                 case 3:
@@ -118,14 +118,13 @@ public class Main {
                     System.out.println("1. Cari berdasarkan nama");
                     System.out.println("2. Cari berdasarkan harga");
                     System.out.print("Pilih: ");
+
                     int pilihanCari = input.nextInt();
                     input.nextLine();
 
                     if (pilihanCari == 1) {
-
                         System.out.print("Masukkan nama produk: ");
                         String namaCari = input.nextLine();
-
                         boolean ditemukan = false;
 
                         for (ProdukKopi produk : daftarProduk) {
@@ -140,10 +139,8 @@ public class Main {
                         }
 
                     } else if (pilihanCari == 2) {
-
                         System.out.print("Masukkan harga produk: ");
                         double hargaCari = input.nextDouble();
-
                         boolean ditemukan = false;
 
                         for (ProdukKopi produk : daftarProduk) {
@@ -160,23 +157,45 @@ public class Main {
                     } else {
                         System.out.println("Pilihan tidak tersedia.");
                     }
-
                     break;
 
                 case 4:
                     System.out.println("\n=== SIMULASI PROSES PRODUK ===");
 
                     ProdukKopi[] arraySimulasi =
-                            daftarProduk.toArray(new ProdukKopi[0]);
+                        daftarProduk.toArray(new ProdukKopi[0]);
 
                     for (ProdukKopi produk : arraySimulasi) {
                         simulasiProduk(produk);
                     }
-
                     break;
 
                 case 5:
                     System.out.println("\nProgram selesai.");
+                    break;
+
+                case 6:
+                    System.out.println("\n=== RATING PRODUK ===");
+
+                    for (ProdukKopi produk : daftarProduk) {
+                        produk.tampilkanInfo();
+
+                        if (produk instanceof DapatDinilai) {
+                            ((DapatDinilai) produk).beriRating();
+                        }
+                    }
+                    break;
+
+                case 7:
+                    System.out.println("\n=== PROSES PESANAN ===");
+
+                    for (ProdukKopi produk : daftarProduk) {
+                        produk.tampilkanInfo();
+
+                        if (produk instanceof DapatDipesan) {
+                            ((DapatDipesan) produk).prosesPesanan();
+                        }
+                    }
                     break;
 
                 default:
@@ -188,3 +207,5 @@ public class Main {
         input.close();
     }
 }
+
+  

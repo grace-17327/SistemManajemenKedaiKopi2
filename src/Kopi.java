@@ -1,4 +1,4 @@
-public class Kopi extends ProdukKopi {
+public class Kopi extends ProdukKopi implements DapatDinilai, DapatDipesan {
     private String ukuran;
     private String jenisBiji;
 
@@ -42,4 +42,16 @@ public class Kopi extends ProdukKopi {
         System.out.println("Ukuran       : " + ukuran);
         System.out.println("Jenis Biji   : " + jenisBiji);
     }
+
+     @Override
+     public void beriRating() {
+        System.out.println("Produk kopi menerima rating dari pelanggan.");
+     }
+
+     
+     @Override
+     public void prosesPesanan() {
+        System.out.println("Pesanan kopi sedang diproses.");
+     }
 }
+

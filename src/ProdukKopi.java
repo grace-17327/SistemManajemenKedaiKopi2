@@ -1,4 +1,5 @@
-public class ProdukKopi {
+
+public abstract class ProdukKopi {
     private String nama;
     private double harga;
     private int stok;
@@ -50,11 +51,7 @@ public class ProdukKopi {
         }
     }
 
-    public void tampilkanInfo() {
-        System.out.println("Nama  : " + nama);
-        System.out.println("Harga : Rp" + harga);
-        System.out.println("Stok  : " + stok);
-    }
+    public abstract void tampilkanInfo();
 
     public boolean cariProduk(String nama) {
         return this.nama.equalsIgnoreCase(nama);

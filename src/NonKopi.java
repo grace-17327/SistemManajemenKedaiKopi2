@@ -1,4 +1,4 @@
-public class NonKopi extends ProdukKopi {
+public class NonKopi extends ProdukKopi implements DapatDinilai, DapatDipesan {
     private String jenisMinuman;
     private String levelManis;
 
@@ -42,4 +42,16 @@ public class NonKopi extends ProdukKopi {
         System.out.println("Jenis Minuman: " + jenisMinuman);
         System.out.println("Level Manis  : " + levelManis);
     }
+    
+    
+     @Override
+     public void beriRating() {
+        System.out.println("Produk non-kopi menerima rating dari pelanggan.");
+}
+
+     @Override
+     public void prosesPesanan() {
+        System.out.println("Pesanan non-kopi sedang diproses.");
+}
+
 }
