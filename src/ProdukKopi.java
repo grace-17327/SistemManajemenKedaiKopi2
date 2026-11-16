@@ -1,5 +1,9 @@
 
-public abstract class ProdukKopi {
+import java.io.Serializable;
+
+public abstract class ProdukKopi implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String nama;
     private double harga;

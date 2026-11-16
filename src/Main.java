@@ -1,6 +1,9 @@
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Main {
 
@@ -48,6 +51,9 @@ public class Main {
                 System.out.println("8. Kelola Data Pelanggan");
                 System.out.println("9. Tampilkan Fasilitas Kedai");
                 System.out.println("10. Simulasi Transaksi");
+                System.out.println("11. Simpan Data");
+                System.out.println("12. Muat Data");
+                System.out.println("13. Tampilkan Log Aktivitas");
                 System.out.println("==================================");
                 System.out.print("Pilih menu: ");
 
@@ -241,7 +247,23 @@ public class Main {
                             transaksi.prosesTransaksi(
                                 pembeli, produkDipilih
                             );
+                            catatLog("Transaksi diproses oleh "
+                                + pembeli.getNama() + " untuk produk "
+                                + produkDipilih.getNama());
                         }
+                        break;
+
+                    case 11:
+                        kedai.simpanData("kedai.dat");
+                        catatLog("Data produk dan pelanggan disimpan.");
+                        break;
+
+                    case 12:
+                        kedai.muatData("kedai.dat");
+                        break;
+
+                    case 13:
+                        tampilkanLog();
                         break;
 
                     default:
@@ -261,5 +283,35 @@ public class Main {
             input.close();
         }
     }
-}
 
+    // MENULIS LOG AKTIVITAS
+    public static void catatLog(String aktivitas) {
+        try (FileWriter writer = new FileWriter("aktivitas.txt", true)) {
+            writer.write(aktivitas + "\n");
+            System.out.println("Log aktivitas berhasil dicatat.");
+        } catch (IOException e) {
+            System.out.println("Gagal mencatat log: " + e.getMessage());
+        }
+    }
+
+    // MEMBACA LOG AKTIVITAS
+    public static void tampilkanLog() {
+        File file = new File("aktivitas.txt");
+
+        if (!file.exists()) {
+            System.out.println("File log belum tersedia.");
+            return;
+        }
+
+        try (Scanner pembaca = new Scanner(file)) {
+            System.out.println("\n=== LOG AKTIVITAS ===");
+
+            while (pembaca.hasNextLine()) {
+                System.out.println(pembaca.nextLine());
+            }
+
+        } catch (IOException e) {
+            System.out.println("Gagal membaca log: " + e.getMessage());
+        }
+    }
+}

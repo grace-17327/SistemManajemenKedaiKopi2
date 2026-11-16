@@ -1,8 +1,16 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.IOException;
+import java.io.Serializable;
 
-public class ManajemenKedai {
+public class ManajemenKedai implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // Composition
     private FasilitasKedai fasilitas;
@@ -85,5 +93,43 @@ public class ManajemenKedai {
     public int getJumlahProduk() {
         return daftarProduk.size();
     }
-}
 
+    // SERIALIZATION
+    public void simpanData(String namaFile) {
+        try (ObjectOutputStream output =
+                new ObjectOutputStream(
+                    new FileOutputStream(namaFile))) {
+
+            ArrayList<Object> data = new ArrayList<>();
+            data.add(daftarProduk);
+            data.add(dataPelanggan);
+
+            output.writeObject(data);
+
+            System.out.println("Data berhasil disimpan ke " + namaFile);
+
+        } catch (IOException e) {
+            System.out.println("Gagal menyimpan data: " + e.getMessage());
+        }
+    }
+
+    // DESERIALIZATION
+    @SuppressWarnings("unchecked")
+    public void muatData(String namaFile) {
+        try (ObjectInputStream input =
+                new ObjectInputStream(
+                    new FileInputStream(namaFile))) {
+
+            ArrayList<Object> data =
+                    (ArrayList<Object>) input.readObject();
+
+            daftarProduk = (ArrayList<ProdukKopi>) data.get(0);
+            dataPelanggan = (HashMap<String, Pelanggan>) data.get(1);
+
+            System.out.println("Data berhasil dimuat dari " + namaFile);
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Gagal memuat data: " + e.getMessage());
+        }
+    }
+}
