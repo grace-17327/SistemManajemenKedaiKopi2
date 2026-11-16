@@ -1,5 +1,7 @@
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -10,10 +12,30 @@ public class Main {
         System.out.println("Proses berhasil dilakukan.");
     }
 
+    public static ProdukKopi cariProduk(
+            ArrayList<ProdukKopi> daftarProduk, String nama)
+            throws ProdukTidakDitemukanException {
+
+        ProdukKopi.validasiProduk(nama);
+
+        for (ProdukKopi produk : daftarProduk) {
+            if (produk.cariProduk(nama)) {
+                return produk;
+            }
+        }
+
+        throw new ProdukTidakDitemukanException(
+            "Produk dengan nama " + nama + " tidak ditemukan."
+        );
+    }
+
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
+
         ArrayList<ProdukKopi> daftarProduk = new ArrayList<>();
+
+        HashMap<String, String> dataPelanggan = new HashMap<>();
 
         daftarProduk.add(new Kopi("Kopi Latte", 25000, 10, "Large", "Arabica"));
         daftarProduk.add(new Kopi("Americano", 20000, 15, "Medium", "Robusta"));
@@ -21,191 +43,264 @@ public class Main {
         daftarProduk.add(new NonKopi("Chocolate", 18000, 12, "Cokelat", "Manis"));
         daftarProduk.add(new Makanan("Croissant", 18000, 7, "Pastry", "Sedang"));
 
-        int pilihan;
+        dataPelanggan.put("PL001", "Andi");
+        dataPelanggan.put("PL002", "Siti");
+        dataPelanggan.put("PL003", "Budi");
 
-        do {
-            System.out.println("\n========================================");
-            System.out.println("       SISTEM MANAJEMEN KEDAI KOPI");
-            System.out.println("========================================");
-            System.out.println("1. Tambah Data Baru");
-            System.out.println("2. Tampilkan Seluruh Data");
-            System.out.println("3. Cari Produk");
-            System.out.println("4. Simulasi Proses Produk");
-            System.out.println("5. Keluar");
-            System.out.println("6. Beri Rating Produk");
-            System.out.println("7. Proses Pesanan Produk");
-            System.out.println("========================================");
-            System.out.print("Pilih menu: ");
+        int pilihan = 0;
 
-            pilihan = input.nextInt();
-            input.nextLine();
+        try {
 
-            switch (pilihan) {
+            do {
+                System.out.println("\n========================================");
+                System.out.println("       SISTEM MANAJEMEN KEDAI KOPI");
+                System.out.println("========================================");
+                System.out.println("1. Tambah Data Produk");
+                System.out.println("2. Tampilkan Seluruh Produk");
+                System.out.println("3. Cari Produk");
+                System.out.println("4. Simulasi Proses Produk");
+                System.out.println("5. Keluar");
+                System.out.println("6. Beri Rating Produk");
+                System.out.println("7. Proses Pesanan Produk");
+                System.out.println("8. Kelola Data Pelanggan");
+                System.out.println("========================================");
+                System.out.print("Pilih menu: ");
 
-                case 1:
-                    System.out.println("\n=== TAMBAH DATA BARU ===");
-                    System.out.print("Nama Produk: ");
-                    String nama = input.nextLine();
+                pilihan = input.nextInt();
+                input.nextLine();
 
-                    System.out.print("Harga: ");
-                    double harga = input.nextDouble();
+                switch (pilihan) {
 
-                    System.out.print("Stok: ");
-                    int stok = input.nextInt();
-                    input.nextLine();
+                    case 1: {
+                        System.out.println("\n=== TAMBAH DATA PRODUK ===");
 
-                    System.out.println("Pilih Jenis Produk:");
-                    System.out.println("1. Kopi");
-                    System.out.println("2. Non Kopi");
-                    System.out.println("3. Makanan");
-                    System.out.print("Pilihan: ");
-                    int jenis = input.nextInt();
-                    input.nextLine();
+                        System.out.print("Nama Produk: ");
+                        String nama = input.nextLine();
 
-                    if (jenis == 1) {
-                        System.out.print("Ukuran: ");
-                        String ukuran = input.nextLine();
-                        System.out.print("Jenis Biji Kopi: ");
-                        String jenisBiji = input.nextLine();
+                        ProdukKopi.validasiProduk(nama);
 
-                        daftarProduk.add(
-                            new Kopi(nama, harga, stok, ukuran, jenisBiji)
-                        );
+                        System.out.print("Harga: ");
+                        double harga = input.nextDouble();
 
-                    } else if (jenis == 2) {
-                        System.out.print("Jenis Minuman: ");
-                        String jenisMinuman = input.nextLine();
-                        System.out.print("Tingkat Rasa: ");
-                        String tingkatRasa = input.nextLine();
+                        System.out.print("Stok: ");
+                        int stok = input.nextInt();
+                        input.nextLine();
 
-                        daftarProduk.add(
-                            new NonKopi(nama, harga, stok, jenisMinuman, tingkatRasa)
-                        );
+                        System.out.println("Jenis Produk:");
+                        System.out.println("1. Kopi");
+                        System.out.println("2. Non Kopi");
+                        System.out.println("3. Makanan");
+                        System.out.print("Pilihan: ");
 
-                    } else if (jenis == 3) {
-                        System.out.print("Jenis Makanan: ");
-                        String jenisMakanan = input.nextLine();
-                        System.out.print("Ukuran Porsi: ");
-                        String ukuranPorsi = input.nextLine();
+                        int jenis = input.nextInt();
+                        input.nextLine();
 
-                        daftarProduk.add(
-                            new Makanan(nama, harga, stok, jenisMakanan, ukuranPorsi)
-                        );
+                        if (jenis == 1) {
+                            System.out.print("Ukuran: ");
+                            String ukuran = input.nextLine();
 
-                    } else {
-                        System.out.println("Jenis produk tidak tersedia.");
+                            System.out.print("Jenis Biji Kopi: ");
+                            String jenisBiji = input.nextLine();
+
+                            daftarProduk.add(
+                                new Kopi(nama, harga, stok, ukuran, jenisBiji)
+                            );
+
+                        } else if (jenis == 2) {
+                            System.out.print("Jenis Minuman: ");
+                            String jenisMinuman = input.nextLine();
+
+                            System.out.print("Tingkat Rasa: ");
+                            String tingkatRasa = input.nextLine();
+
+                            daftarProduk.add(
+                                new NonKopi(nama, harga, stok,
+                                    jenisMinuman, tingkatRasa)
+                            );
+
+                        } else if (jenis == 3) {
+                            System.out.print("Jenis Makanan: ");
+                            String jenisMakanan = input.nextLine();
+
+                            System.out.print("Ukuran Porsi: ");
+                            String ukuranPorsi = input.nextLine();
+
+                            daftarProduk.add(
+                                new Makanan(nama, harga, stok,
+                                    jenisMakanan, ukuranPorsi)
+                            );
+
+                        } else {
+                            System.out.println("Jenis produk tidak tersedia.");
+                        }
+
+                        break;
                     }
-                    break;
 
-                case 2:
-                    System.out.println("\n=== SELURUH DATA PRODUK ===");
+                    case 2: {
+                        System.out.println("\n=== SELURUH DATA PRODUK ===");
 
-                    ProdukKopi[] daftarArray =
-                        daftarProduk.toArray(new ProdukKopi[0]);
+                        if (daftarProduk.isEmpty()) {
+                            System.out.println("Belum ada data produk.");
+                        } else {
+                            for (int i = 0; i < daftarProduk.size(); i++) {
+                                daftarProduk.get(i).tampilkanInfo();
+                            }
+                        }
 
-                    for (ProdukKopi produk : daftarArray) {
-                        produk.tampilkanInfo();
+                        System.out.println("--------------------------------");
+                        System.out.println(
+                            "Total produk: " + daftarProduk.size()
+                        );
+
+                        break;
                     }
 
-                    System.out.println("----------------------------------------");
-                    System.out.println(
-                        "Total objek produk: " + ProdukKopi.getJumlahProduk()
-                    );
-                    break;
-
-                case 3:
-                    System.out.println("\n=== CARI PRODUK ===");
-                    System.out.println("1. Cari berdasarkan nama");
-                    System.out.println("2. Cari berdasarkan harga");
-                    System.out.print("Pilih: ");
-
-                    int pilihanCari = input.nextInt();
-                    input.nextLine();
-
-                    if (pilihanCari == 1) {
+                    case 3: {
+                        System.out.println("\n=== CARI PRODUK ===");
                         System.out.print("Masukkan nama produk: ");
+
                         String namaCari = input.nextLine();
-                        boolean ditemukan = false;
 
-                        for (ProdukKopi produk : daftarProduk) {
-                            if (produk.cariProduk(namaCari)) {
-                                produk.tampilkanInfo();
-                                ditemukan = true;
+                        ProdukKopi hasil = cariProduk(
+                            daftarProduk, namaCari
+                        );
+
+                        System.out.println("Produk ditemukan:");
+                        hasil.tampilkanInfo();
+
+                        break;
+                    }
+
+                    case 4: {
+                        System.out.println("\n=== SIMULASI PROSES PRODUK ===");
+
+                        if (daftarProduk.isEmpty()) {
+                            System.out.println("Belum ada produk.");
+                        } else {
+                            for (ProdukKopi produk : daftarProduk) {
+                                simulasiProduk(produk);
                             }
                         }
 
-                        if (!ditemukan) {
-                            System.out.println("Produk tidak ditemukan.");
-                        }
+                        break;
+                    }
 
-                    } else if (pilihanCari == 2) {
-                        System.out.print("Masukkan harga produk: ");
-                        double hargaCari = input.nextDouble();
-                        boolean ditemukan = false;
+                    case 5: {
+                        System.out.println("\nProgram selesai.");
+                        break;
+                    }
+
+                    case 6: {
+                        System.out.println("\n=== RATING PRODUK ===");
 
                         for (ProdukKopi produk : daftarProduk) {
-                            if (produk.cariProduk(hargaCari)) {
-                                produk.tampilkanInfo();
-                                ditemukan = true;
+                            produk.tampilkanInfo();
+
+                            if (produk instanceof DapatDinilai) {
+                                ((DapatDinilai) produk).beriRating();
                             }
                         }
 
-                        if (!ditemukan) {
-                            System.out.println("Produk tidak ditemukan.");
+                        break;
+                    }
+
+                    case 7: {
+                        System.out.println("\n=== PROSES PESANAN ===");
+
+                        for (ProdukKopi produk : daftarProduk) {
+                            produk.tampilkanInfo();
+
+                            if (produk instanceof DapatDipesan) {
+                                ((DapatDipesan) produk).prosesPesanan();
+                            }
                         }
 
-                    } else {
-                        System.out.println("Pilihan tidak tersedia.");
+                        break;
                     }
-                    break;
 
-                case 4:
-                    System.out.println("\n=== SIMULASI PROSES PRODUK ===");
+                    case 8: {
+                        System.out.println("\n=== KELOLA DATA PELANGGAN ===");
+                        System.out.println("1. Tambah Pelanggan");
+                        System.out.println("2. Cari Pelanggan");
+                        System.out.println("3. Tampilkan Semua Pelanggan");
+                        System.out.print("Pilih: ");
 
-                    ProdukKopi[] arraySimulasi =
-                        daftarProduk.toArray(new ProdukKopi[0]);
+                        int pilihanPelanggan = input.nextInt();
+                        input.nextLine();
 
-                    for (ProdukKopi produk : arraySimulasi) {
-                        simulasiProduk(produk);
-                    }
-                    break;
+                        if (pilihanPelanggan == 1) {
+                            System.out.print("Masukkan ID Pelanggan: ");
+                            String id = input.nextLine();
 
-                case 5:
-                    System.out.println("\nProgram selesai.");
-                    break;
+                            System.out.print("Masukkan Nama Pelanggan: ");
+                            String nama = input.nextLine();
 
-                case 6:
-                    System.out.println("\n=== RATING PRODUK ===");
+                            if (id.trim().isEmpty() || nama.trim().isEmpty()) {
+                                System.out.println(
+                                    "ID dan nama tidak boleh kosong."
+                                );
+                            } else if (dataPelanggan.containsKey(id)) {
+                                System.out.println(
+                                    "ID pelanggan sudah terdaftar."
+                                );
+                            } else {
+                                dataPelanggan.put(id, nama);
+                                System.out.println(
+                                    "Data pelanggan berhasil ditambahkan."
+                                );
+                            }
 
-                    for (ProdukKopi produk : daftarProduk) {
-                        produk.tampilkanInfo();
+                        } else if (pilihanPelanggan == 2) {
+                            System.out.print("Masukkan ID Pelanggan: ");
+                            String id = input.nextLine();
 
-                        if (produk instanceof DapatDinilai) {
-                            ((DapatDinilai) produk).beriRating();
+                            if (dataPelanggan.containsKey(id)) {
+                                System.out.println(
+                                    "Nama Pelanggan: " + dataPelanggan.get(id)
+                                );
+                            } else {
+                                System.out.println(
+                                    "Pelanggan tidak ditemukan."
+                                );
+                            }
+
+                        } else if (pilihanPelanggan == 3) {
+                            System.out.println("\n=== DAFTAR PELANGGAN ===");
+                            System.out.println(
+                                "Jumlah pelanggan: " + dataPelanggan.size()
+                            );
+
+                            for (String id : dataPelanggan.keySet()) {
+                                System.out.println(
+                                    id + " - " + dataPelanggan.get(id)
+                                );
+                            }
+
+                        } else {
+                            System.out.println("Pilihan tidak tersedia.");
                         }
+
+                        break;
                     }
-                    break;
 
-                case 7:
-                    System.out.println("\n=== PROSES PESANAN ===");
+                    default:
+                        System.out.println("Pilihan menu tidak tersedia.");
+                }
 
-                    for (ProdukKopi produk : daftarProduk) {
-                        produk.tampilkanInfo();
+            } while (pilihan != 5);
 
-                        if (produk instanceof DapatDipesan) {
-                            ((DapatDipesan) produk).prosesPesanan();
-                        }
-                    }
-                    break;
+        } catch (InputMismatchException e) {
+            System.out.println(
+                "\nKesalahan: Input harus menggunakan tipe data yang benar."
+            );
 
-                default:
-                    System.out.println("\nPilihan menu tidak tersedia.");
-            }
+        } catch (ProdukTidakDitemukanException e) {
+            System.out.println("\nPesan Error: " + e.getMessage());
 
-        } while (pilihan != 5);
-
-        input.close();
+        } finally {
+            System.out.println("\nBlok finally: Program telah mengakhiri proses.");
+            input.close();
+        }
     }
 }
-
-  

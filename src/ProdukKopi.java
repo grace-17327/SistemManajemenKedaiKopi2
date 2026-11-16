@@ -1,5 +1,6 @@
 
 public abstract class ProdukKopi {
+
     private String nama;
     private double harga;
     private int stok;
@@ -7,7 +8,7 @@ public abstract class ProdukKopi {
     private static int jumlahProduk = 0;
 
     public ProdukKopi(String nama, double harga, int stok) {
-        this.nama = nama;
+        this.setNama(nama);
         this.setHarga(harga);
         this.setStok(stok);
         jumlahProduk++;
@@ -22,6 +23,7 @@ public abstract class ProdukKopi {
             this.nama = nama;
         } else {
             System.out.println("Nama produk tidak boleh kosong.");
+            this.nama = "Produk Tanpa Nama";
         }
     }
 
@@ -63,5 +65,15 @@ public abstract class ProdukKopi {
 
     public static int getJumlahProduk() {
         return jumlahProduk;
+    }
+
+    public static void validasiProduk(String nama)
+            throws ProdukTidakDitemukanException {
+
+        if (nama == null || nama.trim().isEmpty()) {
+            throw new ProdukTidakDitemukanException(
+                "Nama produk tidak boleh kosong!"
+            );
+        }
     }
 }
