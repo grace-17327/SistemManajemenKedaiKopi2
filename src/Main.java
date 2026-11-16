@@ -1,60 +1,43 @@
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void simulasiProduk(ProdukKopi produk) {
-        System.out.println("\n=== SIMULASI PROSES PRODUK ===");
-        produk.tampilkanInfo();
-        System.out.println("Proses berhasil dilakukan.");
-    }
-
-    public static ProdukKopi cariProduk(
-            ArrayList<ProdukKopi> daftarProduk, String nama)
-            throws ProdukTidakDitemukanException {
-
-        ProdukKopi.validasiProduk(nama);
-
-        for (ProdukKopi produk : daftarProduk) {
-            if (produk.cariProduk(nama)) {
-                return produk;
-            }
-        }
-
-        throw new ProdukTidakDitemukanException(
-            "Produk dengan nama " + nama + " tidak ditemukan."
-        );
-    }
-
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
 
-        ArrayList<ProdukKopi> daftarProduk = new ArrayList<>();
+        ManajemenKedai kedai = new ManajemenKedai();
+        TransaksiKedai transaksi = new TransaksiKedai();
 
-        HashMap<String, String> dataPelanggan = new HashMap<>();
+        kedai.tambahProduk(
+            new Kopi("Kopi Latte", 25000, 10, "Large", "Arabica")
+        );
+        kedai.tambahProduk(
+            new Kopi("Americano", 20000, 15, "Medium", "Robusta")
+        );
+        kedai.tambahProduk(
+            new NonKopi("Matcha Latte", 22000, 8, "Latte", "Sedang")
+        );
+        kedai.tambahProduk(
+            new NonKopi("Chocolate", 18000, 12, "Cokelat", "Manis")
+        );
+        kedai.tambahProduk(
+            new Makanan("Croissant", 18000, 7, "Pastry", "Sedang")
+        );
 
-        daftarProduk.add(new Kopi("Kopi Latte", 25000, 10, "Large", "Arabica"));
-        daftarProduk.add(new Kopi("Americano", 20000, 15, "Medium", "Robusta"));
-        daftarProduk.add(new NonKopi("Matcha Latte", 22000, 8, "Latte", "Sedang"));
-        daftarProduk.add(new NonKopi("Chocolate", 18000, 12, "Cokelat", "Manis"));
-        daftarProduk.add(new Makanan("Croissant", 18000, 7, "Pastry", "Sedang"));
-
-        dataPelanggan.put("PL001", "Andi");
-        dataPelanggan.put("PL002", "Siti");
-        dataPelanggan.put("PL003", "Budi");
+        kedai.tambahPelanggan(new Pelanggan("PL001", "Andi"));
+        kedai.tambahPelanggan(new Pelanggan("PL002", "Siti"));
+        kedai.tambahPelanggan(new Pelanggan("PL003", "Budi"));
 
         int pilihan = 0;
 
         try {
-
             do {
-                System.out.println("\n========================================");
-                System.out.println("       SISTEM MANAJEMEN KEDAI KOPI");
-                System.out.println("========================================");
+                System.out.println("\n==================================");
+                System.out.println("     SISTEM MANAJEMEN KEDAI KOPI");
+                System.out.println("==================================");
                 System.out.println("1. Tambah Data Produk");
                 System.out.println("2. Tampilkan Seluruh Produk");
                 System.out.println("3. Cari Produk");
@@ -63,7 +46,9 @@ public class Main {
                 System.out.println("6. Beri Rating Produk");
                 System.out.println("7. Proses Pesanan Produk");
                 System.out.println("8. Kelola Data Pelanggan");
-                System.out.println("========================================");
+                System.out.println("9. Tampilkan Fasilitas Kedai");
+                System.out.println("10. Simulasi Transaksi");
+                System.out.println("==================================");
                 System.out.print("Pilih menu: ");
 
                 pilihan = input.nextInt();
@@ -71,9 +56,7 @@ public class Main {
 
                 switch (pilihan) {
 
-                    case 1: {
-                        System.out.println("\n=== TAMBAH DATA PRODUK ===");
-
+                    case 1:
                         System.out.print("Nama Produk: ");
                         String nama = input.nextLine();
 
@@ -86,12 +69,10 @@ public class Main {
                         int stok = input.nextInt();
                         input.nextLine();
 
-                        System.out.println("Jenis Produk:");
                         System.out.println("1. Kopi");
                         System.out.println("2. Non Kopi");
                         System.out.println("3. Makanan");
-                        System.out.print("Pilihan: ");
-
+                        System.out.print("Jenis Produk: ");
                         int jenis = input.nextInt();
                         input.nextLine();
 
@@ -100,189 +81,168 @@ public class Main {
                             String ukuran = input.nextLine();
 
                             System.out.print("Jenis Biji Kopi: ");
-                            String jenisBiji = input.nextLine();
+                            String biji = input.nextLine();
 
-                            daftarProduk.add(
-                                new Kopi(nama, harga, stok, ukuran, jenisBiji)
+                            kedai.tambahProduk(
+                                new Kopi(nama, harga, stok, ukuran, biji)
                             );
 
                         } else if (jenis == 2) {
                             System.out.print("Jenis Minuman: ");
-                            String jenisMinuman = input.nextLine();
+                            String minuman = input.nextLine();
 
                             System.out.print("Tingkat Rasa: ");
-                            String tingkatRasa = input.nextLine();
+                            String rasa = input.nextLine();
 
-                            daftarProduk.add(
-                                new NonKopi(nama, harga, stok,
-                                    jenisMinuman, tingkatRasa)
+                            kedai.tambahProduk(
+                                new NonKopi(nama, harga, stok, minuman, rasa)
                             );
 
                         } else if (jenis == 3) {
                             System.out.print("Jenis Makanan: ");
-                            String jenisMakanan = input.nextLine();
+                            String makanan = input.nextLine();
 
                             System.out.print("Ukuran Porsi: ");
-                            String ukuranPorsi = input.nextLine();
+                            String porsi = input.nextLine();
 
-                            daftarProduk.add(
-                                new Makanan(nama, harga, stok,
-                                    jenisMakanan, ukuranPorsi)
+                            kedai.tambahProduk(
+                                new Makanan(nama, harga, stok, makanan, porsi)
                             );
 
                         } else {
                             System.out.println("Jenis produk tidak tersedia.");
                         }
-
                         break;
-                    }
 
-                    case 2: {
-                        System.out.println("\n=== SELURUH DATA PRODUK ===");
-
-                        if (daftarProduk.isEmpty()) {
-                            System.out.println("Belum ada data produk.");
-                        } else {
-                            for (int i = 0; i < daftarProduk.size(); i++) {
-                                daftarProduk.get(i).tampilkanInfo();
-                            }
-                        }
-
-                        System.out.println("--------------------------------");
-                        System.out.println(
-                            "Total produk: " + daftarProduk.size()
-                        );
-
+                    case 2:
+                        kedai.tampilkanProduk();
                         break;
-                    }
 
-                    case 3: {
-                        System.out.println("\n=== CARI PRODUK ===");
+                    case 3:
                         System.out.print("Masukkan nama produk: ");
+                        String cari = input.nextLine();
 
-                        String namaCari = input.nextLine();
-
-                        ProdukKopi hasil = cariProduk(
-                            daftarProduk, namaCari
-                        );
-
+                        ProdukKopi hasil = kedai.cariProduk(cari);
                         System.out.println("Produk ditemukan:");
                         hasil.tampilkanInfo();
-
                         break;
-                    }
 
-                    case 4: {
-                        System.out.println("\n=== SIMULASI PROSES PRODUK ===");
-
-                        if (daftarProduk.isEmpty()) {
-                            System.out.println("Belum ada produk.");
-                        } else {
-                            for (ProdukKopi produk : daftarProduk) {
-                                simulasiProduk(produk);
-                            }
+                    case 4:
+                        System.out.println("\n=== SIMULASI PRODUK ===");
+                        for (ProdukKopi produk : kedai.getDaftarProduk()) {
+                            produk.tampilkanInfo();
+                            System.out.println("Proses berhasil dilakukan.");
                         }
-
                         break;
-                    }
 
-                    case 5: {
-                        System.out.println("\nProgram selesai.");
+                    case 5:
+                        System.out.println("Program selesai.");
                         break;
-                    }
 
-                    case 6: {
+                    case 6:
                         System.out.println("\n=== RATING PRODUK ===");
-
-                        for (ProdukKopi produk : daftarProduk) {
+                        for (ProdukKopi produk : kedai.getDaftarProduk()) {
                             produk.tampilkanInfo();
 
                             if (produk instanceof DapatDinilai) {
                                 ((DapatDinilai) produk).beriRating();
                             }
                         }
-
                         break;
-                    }
 
-                    case 7: {
+                    case 7:
                         System.out.println("\n=== PROSES PESANAN ===");
-
-                        for (ProdukKopi produk : daftarProduk) {
+                        for (ProdukKopi produk : kedai.getDaftarProduk()) {
                             produk.tampilkanInfo();
 
                             if (produk instanceof DapatDipesan) {
                                 ((DapatDipesan) produk).prosesPesanan();
                             }
                         }
-
                         break;
-                    }
 
-                    case 8: {
-                        System.out.println("\n=== KELOLA DATA PELANGGAN ===");
+                    case 8:
+                        System.out.println("\n=== KELOLA PELANGGAN ===");
                         System.out.println("1. Tambah Pelanggan");
                         System.out.println("2. Cari Pelanggan");
                         System.out.println("3. Tampilkan Semua Pelanggan");
                         System.out.print("Pilih: ");
 
-                        int pilihanPelanggan = input.nextInt();
+                        int menuPelanggan = input.nextInt();
                         input.nextLine();
 
-                        if (pilihanPelanggan == 1) {
+                        if (menuPelanggan == 1) {
+                            System.out.print("ID Pelanggan: ");
+                            String id = input.nextLine();
+
+                            System.out.print("Nama Pelanggan: ");
+                            String namaPelanggan = input.nextLine();
+
+                            if (id.trim().isEmpty()
+                                    || namaPelanggan.trim().isEmpty()) {
+                                System.out.println("Data tidak boleh kosong.");
+                            } else if (kedai.cariPelanggan(id) != null) {
+                                System.out.println("ID sudah terdaftar.");
+                            } else {
+                                kedai.tambahPelanggan(
+                                    new Pelanggan(id, namaPelanggan)
+                                );
+                                System.out.println("Pelanggan berhasil ditambahkan.");
+                            }
+
+                        } else if (menuPelanggan == 2) {
                             System.out.print("Masukkan ID Pelanggan: ");
                             String id = input.nextLine();
 
-                            System.out.print("Masukkan Nama Pelanggan: ");
-                            String nama = input.nextLine();
+                            Pelanggan pelanggan = kedai.cariPelanggan(id);
 
-                            if (id.trim().isEmpty() || nama.trim().isEmpty()) {
-                                System.out.println(
-                                    "ID dan nama tidak boleh kosong."
-                                );
-                            } else if (dataPelanggan.containsKey(id)) {
-                                System.out.println(
-                                    "ID pelanggan sudah terdaftar."
-                                );
+                            if (pelanggan != null) {
+                                pelanggan.tampilkanInfo();
                             } else {
-                                dataPelanggan.put(id, nama);
-                                System.out.println(
-                                    "Data pelanggan berhasil ditambahkan."
-                                );
+                                System.out.println("Pelanggan tidak ditemukan.");
                             }
 
-                        } else if (pilihanPelanggan == 2) {
-                            System.out.print("Masukkan ID Pelanggan: ");
-                            String id = input.nextLine();
-
-                            if (dataPelanggan.containsKey(id)) {
-                                System.out.println(
-                                    "Nama Pelanggan: " + dataPelanggan.get(id)
-                                );
-                            } else {
-                                System.out.println(
-                                    "Pelanggan tidak ditemukan."
-                                );
-                            }
-
-                        } else if (pilihanPelanggan == 3) {
-                            System.out.println("\n=== DAFTAR PELANGGAN ===");
-                            System.out.println(
-                                "Jumlah pelanggan: " + dataPelanggan.size()
-                            );
-
-                            for (String id : dataPelanggan.keySet()) {
-                                System.out.println(
-                                    id + " - " + dataPelanggan.get(id)
-                                );
-                            }
+                        } else if (menuPelanggan == 3) {
+                            kedai.tampilkanPelanggan();
 
                         } else {
                             System.out.println("Pilihan tidak tersedia.");
                         }
-
                         break;
-                    }
+
+                    case 9:
+                        kedai.tampilkanFasilitas();
+                        break;
+
+                    case 10:
+                        System.out.print("Masukkan ID Pelanggan: ");
+                        String idTransaksi = input.nextLine();
+
+                        Pelanggan pembeli =
+                            kedai.cariPelanggan(idTransaksi);
+
+                        if (pembeli == null) {
+                            System.out.println("Pelanggan tidak ditemukan.");
+                            break;
+                        }
+
+                        kedai.tampilkanProduk();
+
+                        System.out.print("Pilih nomor produk: ");
+                        int nomor = input.nextInt();
+                        input.nextLine();
+
+                        ProdukKopi produkDipilih =
+                            kedai.getProduk(nomor - 1);
+
+                        if (produkDipilih == null) {
+                            System.out.println("Nomor produk tidak valid.");
+                        } else {
+                            transaksi.prosesTransaksi(
+                                pembeli, produkDipilih
+                            );
+                        }
+                        break;
 
                     default:
                         System.out.println("Pilihan menu tidak tersedia.");
@@ -291,16 +251,15 @@ public class Main {
             } while (pilihan != 5);
 
         } catch (InputMismatchException e) {
-            System.out.println(
-                "\nKesalahan: Input harus menggunakan tipe data yang benar."
-            );
+            System.out.println("Kesalahan: Input harus berupa angka.");
 
         } catch (ProdukTidakDitemukanException e) {
-            System.out.println("\nPesan Error: " + e.getMessage());
+            System.out.println("Pesan Error: " + e.getMessage());
 
         } finally {
-            System.out.println("\nBlok finally: Program telah mengakhiri proses.");
+            System.out.println("Program telah mengakhiri proses.");
             input.close();
         }
     }
 }
+
